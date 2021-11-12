@@ -26,10 +26,6 @@ func getConfDir() string {
 	return dir
 }
 
-func getConfFile() string {
-	return filepath.Join(getConfDir(), "config")
-}
-
 func getHistoryFile() string {
 	return filepath.Join(getConfDir(), "history")
 }
