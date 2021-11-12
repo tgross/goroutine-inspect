@@ -4,13 +4,15 @@ An interactive tool to analyze Golang goroutine dump.
 
 ## Build and Run
 
-Install this fork with:
+Upstream does not use go modules, so the package has been renamed in
+`go.mod` so that installation with current toolchains works as
+expected. Install this fork with:
 
 ```bash
-go install github.com/tgross/goroutine-inspect@trunk
+go install github.com/tgross/goroutine-inspect@latest
 ```
 
-Build from source with:
+Or build and run from source with:
 
 ```bash
 go build .
