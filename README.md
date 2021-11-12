@@ -15,7 +15,8 @@ Workspace is the place to hold imported goroutine dumps. Instructions are
 provided to maintain these dumps.
 
 In the interactive shell, two kinds of instructions can be issued: commands
-and statements.
+and statements. Shell history is stored in the user's `XDG_CACHE_HOME`
+directory.
 
 ## Commands
 

@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -11,12 +10,12 @@ import (
 )
 
 func getConfDir() string {
-	usr, err := user.Current()
+	userDir, err := os.UserCacheDir()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	dir := filepath.Join(usr.HomeDir, ".goroutine-inspect")
+	dir := filepath.Join(userDir, "goroutine-inspect")
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err = os.MkdirAll(dir, os.ModePerm); err != nil {
 			log.Fatal(err)
