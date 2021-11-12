@@ -7,7 +7,14 @@ An interactive tool to analyze Golang goroutine dump.
 Install this fork with:
 
 ```bash
-go install github.com/tgross/goroutine-inspect@latest
+go install github.com/tgross/goroutine-inspect@trunk
+```
+
+Build from source with:
+
+```bash
+go build .
+./goroutine-inspect
 ```
 
 ## Workspace
