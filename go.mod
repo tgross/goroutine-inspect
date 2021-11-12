@@ -1,4 +1,4 @@
-module github.com/linuxerwang/goroutine-inspect
+module github.com/tgross/goroutine-inspect
 
 go 1.17
 
