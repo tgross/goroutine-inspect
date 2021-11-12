@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -97,6 +98,12 @@ func main() {
 						fmt.Println("Expect command \"cd <dir>\"")
 						continue
 					}
+					if strings.HasPrefix(dir, "~") {
+						home, _ := os.UserHomeDir()
+						dir = filepath.Join(home, dir[1:])
+					}
+					dir = os.ExpandEnv(dir)
+
 					if err := os.Chdir(dir); err != nil {
 						fmt.Println(err)
 					}
