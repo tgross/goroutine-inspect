@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -13,6 +14,13 @@ var (
 
 func load(fn string) (*GoroutineDump, error) {
 	fn = strings.Trim(fn, "\"")
+
+	if strings.HasPrefix(fn, "~") {
+		home, _ := os.UserHomeDir()
+		fn = filepath.Join(home, fn[1:])
+	}
+	fn = os.ExpandEnv(fn)
+
 	f, err := os.Open(fn)
 	if err != nil {
 		return nil, err
