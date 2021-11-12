@@ -208,6 +208,13 @@ created by google.golang.org/grpc/transport.newHTTP2Server
 Note that the above is after a dedup operation, so it shows the same stack trace
 existing 119 times. See the "Dedup goroutines" section.
 
+Search expressions can combine terms using the syntax described by the
+underlying [`govaluate`] library:
+
+```bash
+>> original.search("state == 'select' && (duration > 10 || duration <= 1)")
+```
+
 ### Diff Two Goroutine Dumps
 
 ```bash
@@ -325,3 +332,6 @@ Example:
 ```bash
 >> original.search("contains(lower(trace), 'handlestream')")
 ```
+
+
+[`govaluate`]: https://github.com/Knetic/govaluate#what-operators-and-types-does-this-support
