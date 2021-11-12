@@ -84,7 +84,11 @@ func expr(e string) error {
 					default:
 						return errors.New("search() expects at most three arguments")
 					}
-					v.Search(ex.Args[0].(*ast.BasicLit).Value, offset, limit)
+					lit, ok := ex.Args[0].(*ast.BasicLit)
+					if !ok {
+						return errors.New("search() expects a quoted expression")
+					}
+					v.Search(lit.Value, offset, limit)
 					return nil
 				case "show":
 					var err error
