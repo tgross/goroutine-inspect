@@ -79,7 +79,6 @@ func (g *Goroutine) AddLine(l string) {
 		if strings.HasPrefix(l, "\t") {
 			parts := strings.Split(l, " ")
 			if len(parts) != 2 {
-				fmt.Println("ignored one line for digest")
 				return
 			}
 
