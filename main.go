@@ -41,7 +41,7 @@ func init() {
 	for k := range commands {
 		cmds = append(cmds, k)
 	}
-	sort.Sort(sort.StringSlice(cmds))
+	sort.Strings(cmds)
 }
 
 func main() {

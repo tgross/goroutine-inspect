@@ -15,7 +15,7 @@ import (
 	"os"
 
 	"github.com/Knetic/govaluate"
-	"github.com/foize/go.sgr"
+	sgr "github.com/foize/go.sgr"
 )
 
 type MetaType int
@@ -208,9 +208,7 @@ func (gd GoroutineDump) Copy(cond string) *GoroutineDump {
 	}
 	if cond == "" {
 		// Copy all.
-		for _, d := range gd.goroutines {
-			dump.goroutines = append(dump.goroutines, d)
-		}
+		dump.goroutines = append(dump.goroutines, gd.goroutines...)
 	} else {
 		goroutines, err := gd.withCondition(cond, func(i int, g *Goroutine, passed bool) *Goroutine {
 			if passed {
@@ -232,11 +230,7 @@ func (gd GoroutineDump) Copy(cond string) *GoroutineDump {
 func (gd *GoroutineDump) Dedup() {
 	m := map[string][]int{}
 	for _, g := range gd.goroutines {
-		if _, ok := m[g.fullMd5]; ok {
-			m[g.fullMd5] = append(m[g.fullMd5], g.id)
-		} else {
-			m[g.fullMd5] = []int{g.id}
-		}
+		m[g.fullMd5] = append(m[g.fullMd5], g.id)
 	}
 
 	kept := make([]*Goroutine, 0, len(gd.goroutines))
@@ -370,7 +364,7 @@ func (gd GoroutineDump) Summary() {
 		for k := range stats {
 			states = append(states, k)
 		}
-		sort.Sort(sort.StringSlice(states))
+		sort.Strings(states)
 
 		for _, k := range states {
 			fmt.Printf("%15s: %d\n", k, stats[k])
