@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	identifierPattern  = regexp.MustCompile("[_a-zA-Z][_a-zA-Z0-9]*")
-	identifiersPattern = regexp.MustCompile("[_a-zA-Z][_a-zA-Z0-9]*(\\s*,\\s*[_a-zA-Z][_a-zA-Z0-9]*)*\\s*")
+	identifierPattern  = regexp.MustCompile(`[_a-zA-Z][_a-zA-Z0-9]*`)
+	identifiersPattern = regexp.MustCompile(`[_a-zA-Z][_a-zA-Z0-9]*(\s*,\s*[_a-zA-Z][_a-zA-Z0-9]*)*\s*`)
 )
 
 func assign(cmd string) error {
