@@ -109,9 +109,9 @@ var. Function keep() do the reversed conditional.
       chan send: 4
 
 >> copy.delete("id>100 && id<1000")
-Deleted 118 goroutines, kept 2099.
+Filtered 118 goroutines, kept 2099.
 >> copy.keep("id>200")
-Deleted 12 goroutines, kept 2087.
+Filtered 12 goroutines, kept 2087.
 >> copy
 # of goroutines: 2087
 

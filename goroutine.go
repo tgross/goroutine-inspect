@@ -419,6 +419,8 @@ func (gd *GoroutineDump) withCondition(cond string, callback func(int, *Goroutin
 			return nil, errors.New("argument expression should return a boolean")
 		}
 	}
-	fmt.Printf("Deleted %d goroutines, kept %d.\n", len(gd.goroutines)-len(goroutines), len(goroutines))
+	// TODO: let the caller pass in a format string so that we can get
+	// nicer output based on the command being used
+	fmt.Printf("Filtered %d goroutines, kept %d.\n", len(gd.goroutines)-len(goroutines), len(goroutines))
 	return goroutines, nil
 }
