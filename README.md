@@ -2,6 +2,10 @@
 
 An interactive tool to analyze Golang goroutine dump.
 
+_Note: this is my personal fork of [linuxerwang/goroutine-inspect] and
+has no support or guarantee that breaking behavior changes won't
+change at any time._
+
 ## Build and Run
 
 Upstream does not use go modules, so the package has been renamed in
@@ -344,3 +348,4 @@ Example:
 
 
 [`govaluate`]: https://github.com/Knetic/govaluate#what-operators-and-types-does-this-support
+[linuxerwang/goroutine-inspect]: https://github.com/linuxerwang/goroutine-inspect
