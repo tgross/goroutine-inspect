@@ -339,7 +339,7 @@ func (gd GoroutineDump) Search(cond string, offset, limit int) {
 // Show displays the goroutines with the offset and limit.
 func (gd GoroutineDump) Show(offset, limit int) {
 	for i := offset; i < offset+limit && i < len(gd.goroutines); i++ {
-		gd.goroutines[offset+i].PrintWithColor()
+		gd.goroutines[i].PrintWithColor()
 	}
 }
 
