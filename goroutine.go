@@ -7,12 +7,11 @@ import (
 	"fmt"
 	"hash"
 	"io"
+	"os"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
-
-	"os"
 
 	"github.com/Knetic/govaluate"
 	sgr "github.com/foize/go.sgr"
@@ -137,20 +136,23 @@ func (g Goroutine) Print(w io.Writer) error {
 }
 
 // PrintWithColor outputs the goroutine details to stdout with color.
-func (g Goroutine) PrintWithColor() {
-	sgr.Printf("[fg-blue]%s[reset]", g.header)
+func (g Goroutine) PrintWithColor(w io.Writer) {
+	io.WriteString(w, fmt.Sprintf("%s%s%s",
+		sgr.FgBlue, g.header, sgr.Reset))
 	if len(g.duplicates) > 0 {
-		sgr.Printf(" [fg-red]%d[reset] times: [[", len(g.duplicates))
+		io.WriteString(w, fmt.Sprintf(" %s%d%s times: [[",
+			sgr.FgRed, len(g.duplicates), sgr.Reset))
 		for i, id := range g.duplicates {
 			if i > 0 {
-				sgr.Printf(", ")
+				io.WriteString(w, ", ")
 			}
-			sgr.Printf("[fg-green]%d[reset]", id)
+			io.WriteString(w, fmt.Sprintf("%s%d%s",
+				sgr.FgGreen, id, sgr.Reset))
 		}
-		sgr.Print("]")
+		io.WriteString(w, "]")
 	}
-	sgr.Println()
-	fmt.Println(g.trace)
+	io.WriteString(w, "\n")
+	io.WriteString(w, g.trace+"\n")
 }
 
 // NewGoroutine creates and returns a new Goroutine.
@@ -193,6 +195,7 @@ func NewGoroutine(metaline string) (*Goroutine, error) {
 // GoroutineDump defines a goroutine dump.
 type GoroutineDump struct {
 	goroutines []*Goroutine
+	w          io.Writer
 }
 
 // Add appends a goroutine info to the list.
@@ -216,12 +219,16 @@ func (gd GoroutineDump) Copy(cond string) *GoroutineDump {
 			return nil
 		})
 		if err != nil {
-			fmt.Println(err)
+			gd.PrintErr(err)
 			return nil
 		}
 		dump.goroutines = goroutines
 	}
 	return &dump
+}
+
+func (gd GoroutineDump) PrintErr(err error) {
+	io.WriteString(gd.w, err.Error()+"\n")
 }
 
 // Dedup finds goroutines with duplicated stack traces and keeps only one copy
@@ -246,7 +253,8 @@ outter:
 	}
 
 	if len(gd.goroutines) != len(kept) {
-		fmt.Printf("Dedupped %d, kept %d\n", len(gd.goroutines), len(kept))
+		io.WriteString(gd.w, fmt.Sprintf(
+			"Dedupped %d, kept %d\n", len(gd.goroutines), len(kept)))
 		gd.goroutines = kept
 	}
 }
@@ -314,6 +322,8 @@ func (gd GoroutineDump) Save(fn string) error {
 			return err
 		}
 	}
+
+	io.WriteString(gd.w, fmt.Sprintf("Goroutines are saved to file %s.\n", fn))
 	return nil
 }
 
@@ -325,38 +335,40 @@ func (gd GoroutineDump) Search(cond string, offset, limit int) {
 	_, err := gd.withCondition(cond, func(i int, g *Goroutine, passed bool) *Goroutine {
 		if passed {
 			if count >= offset && count < offset+limit {
-				g.PrintWithColor()
+				g.PrintWithColor(gd.w)
 			}
 			count++
 		}
 		return nil
 	})
 	if err != nil {
-		fmt.Println(err)
+		gd.PrintErr(err)
 	}
 }
 
 // Show displays the goroutines with the offset and limit.
 func (gd GoroutineDump) Show(offset, limit int) {
 	for i := offset; i < offset+limit && i < len(gd.goroutines); i++ {
-		gd.goroutines[i].PrintWithColor()
+		gd.goroutines[i].PrintWithColor(gd.w)
 	}
 }
 
 // Sort sorts the goroutine entries.
 func (gd *GoroutineDump) Sort() {
-	fmt.Printf("# of goroutines: %d\n", len(gd.goroutines))
+	io.WriteString(gd.w,
+		fmt.Sprintf("# of goroutines: %d\n", len(gd.goroutines)))
 }
 
 // Summary prints the summary of the goroutine dump.
 func (gd GoroutineDump) Summary() {
-	fmt.Printf("# of goroutines: %d\n", len(gd.goroutines))
+	io.WriteString(gd.w,
+		fmt.Sprintf("# of goroutines: %d\n", len(gd.goroutines)))
 	stats := map[string]int{}
 	if len(gd.goroutines) > 0 {
 		for _, g := range gd.goroutines {
 			stats[g.metas[MetaState]]++
 		}
-		fmt.Println()
+		io.WriteString(gd.w, "\n")
 	}
 	if len(stats) > 0 {
 		states := make([]string, 0, 10)
@@ -366,16 +378,17 @@ func (gd GoroutineDump) Summary() {
 		sort.Strings(states)
 
 		for _, k := range states {
-			fmt.Printf("%15s: %d\n", k, stats[k])
+			io.WriteString(gd.w, fmt.Sprintf("%15s: %d\n", k, stats[k]))
 		}
-		fmt.Println()
+		io.WriteString(gd.w, "\n")
 	}
 }
 
 // NewGoroutineDump creates and returns a new GoroutineDump.
-func NewGoroutineDump() *GoroutineDump {
+func NewGoroutineDump(w io.Writer) *GoroutineDump {
 	return &GoroutineDump{
 		goroutines: []*Goroutine{},
+		w:          w,
 	}
 }
 
@@ -421,6 +434,8 @@ func (gd *GoroutineDump) withCondition(cond string, callback func(int, *Goroutin
 	}
 	// TODO: let the caller pass in a format string so that we can get
 	// nicer output based on the command being used
-	fmt.Printf("Filtered %d goroutines, kept %d.\n", len(gd.goroutines)-len(goroutines), len(goroutines))
+	io.WriteString(gd.w, fmt.Sprintf(
+		"Filtered %d goroutines, kept %d.\n",
+		len(gd.goroutines)-len(goroutines), len(goroutines)))
 	return goroutines, nil
 }

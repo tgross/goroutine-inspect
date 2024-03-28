@@ -2,10 +2,13 @@ package main
 
 import (
 	"bufio"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/mattn/go-colorable"
 )
 
 var (
@@ -26,11 +29,16 @@ func load(fn string) (*GoroutineDump, error) {
 		return nil, err
 	}
 	defer f.Close()
+	return loadFrom(f)
+}
 
-	dump := NewGoroutineDump()
+func loadFrom(r io.Reader) (*GoroutineDump, error) {
+	dump := NewGoroutineDump(colorable.NewColorableStdout())
+
 	var goroutine *Goroutine
+	var err error
 
-	scanner := bufio.NewScanner(f)
+	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
 		if startLinePattern.MatchString(line) {

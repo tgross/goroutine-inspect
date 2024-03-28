@@ -58,7 +58,6 @@ func expr(e string) error {
 					if err := v.Save(fn); err != nil {
 						return err
 					}
-					fmt.Printf("Goroutines are saved to file %s.\n", fn)
 				case "search":
 					var err error
 					offset := 0
