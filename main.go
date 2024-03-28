@@ -12,7 +12,6 @@ import (
 
 	"sort"
 
-	sgr "github.com/foize/go.sgr"
 	"github.com/peterh/liner"
 )
 
@@ -151,7 +150,7 @@ func printDir(wd string) {
 
 	for _, fi := range fis {
 		if fi.IsDir() {
-			sgr.Printf("[fg-blue]%s[reset]\n", fi.Name())
+			fmt.Printf("%s%s%s\n", fgBlue, fi.Name(), reset)
 		} else {
 			fmt.Println(fi.Name())
 		}
@@ -184,3 +183,10 @@ func printHelp() {
 	fmt.Println("\t<var>.show(offset, limit)")
 	fmt.Println()
 }
+
+const (
+	fgRed   = "\x1b[38;05;1m"
+	fgGreen = "\x1b[38;05;2m"
+	fgBlue  = "\x1b[38;05;4m"
+	reset   = "\x1b[0m"
+)

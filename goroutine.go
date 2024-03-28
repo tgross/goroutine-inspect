@@ -14,7 +14,6 @@ import (
 	"strings"
 
 	"github.com/Knetic/govaluate"
-	sgr "github.com/foize/go.sgr"
 )
 
 type MetaType int
@@ -138,16 +137,16 @@ func (g Goroutine) Print(w io.Writer) error {
 // PrintWithColor outputs the goroutine details to stdout with color.
 func (g Goroutine) PrintWithColor(w io.Writer) {
 	io.WriteString(w, fmt.Sprintf("%s%s%s",
-		sgr.FgBlue, g.header, sgr.Reset))
+		fgBlue, g.header, reset))
 	if len(g.duplicates) > 0 {
 		io.WriteString(w, fmt.Sprintf(" %s%d%s times: [[",
-			sgr.FgRed, len(g.duplicates), sgr.Reset))
+			fgRed, len(g.duplicates), reset))
 		for i, id := range g.duplicates {
 			if i > 0 {
 				io.WriteString(w, ", ")
 			}
 			io.WriteString(w, fmt.Sprintf("%s%d%s",
-				sgr.FgGreen, id, sgr.Reset))
+				fgGreen, id, reset))
 		}
 		io.WriteString(w, "]")
 	}
@@ -329,7 +328,9 @@ func (gd GoroutineDump) Save(fn string) error {
 
 // Search displays the goroutines with the offset and limit.
 func (gd GoroutineDump) Search(cond string, offset, limit int) {
-	sgr.Printf("[fg-green]Search with offset %d and limit %d.[reset]\n\n", offset, limit)
+	io.WriteString(gd.w, fmt.Sprintf(
+		"%sSearch with offset %d and limit %d.%s\n\n",
+		fgGreen, offset, limit, reset))
 
 	count := 0
 	_, err := gd.withCondition(cond, func(i int, g *Goroutine, passed bool) *Goroutine {

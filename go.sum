@@ -1,7 +1,5 @@
 github.com/Knetic/govaluate v3.0.0+incompatible h1:7o6+MAPhYTCF0+fdvoz1xDedhRb4f6s9Tn1Tt7/WTEg=
 github.com/Knetic/govaluate v3.0.0+incompatible/go.mod h1:r7JcOSlj0wfOMncg0iLm8Leh48TZaKVeNIfJntJ2wa0=
-github.com/foize/go.sgr v0.0.0-20140220094842-40bdfc98040c h1:NhHTf8Ewd3NS46DylZB75Zi0UeATvDbDwFEmsO5ZVpQ=
-github.com/foize/go.sgr v0.0.0-20140220094842-40bdfc98040c/go.mod h1:0ghtL4RhKBjyWMkHCWosp2aHSEXShQeQMLQ0qBCytfU=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/mattn/go-colorable v0.1.13 h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=

@@ -4,7 +4,6 @@ go 1.22.1
 
 require (
 	github.com/Knetic/govaluate v3.0.0+incompatible
-	github.com/foize/go.sgr v0.0.0-20140220094842-40bdfc98040c
 	github.com/mattn/go-colorable v0.1.13
 	github.com/peterh/liner v1.2.1
 	github.com/shoenig/test v1.7.2
