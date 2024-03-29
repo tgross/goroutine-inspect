@@ -139,7 +139,7 @@ func (g Goroutine) PrintWithColor(w io.Writer) {
 	io.WriteString(w, fmt.Sprintf("%s%s%s",
 		fgBlue, g.header, reset))
 	if len(g.duplicates) > 0 {
-		io.WriteString(w, fmt.Sprintf(" %s%d%s times: [[",
+		io.WriteString(w, fmt.Sprintf(" %s%d%s times: [",
 			fgRed, len(g.duplicates), reset))
 		for i, id := range g.duplicates {
 			if i > 0 {
