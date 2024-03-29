@@ -11,7 +11,7 @@
 *.out
 
 # Build output
-goroutine-inspect
+dist/
 
 # Testing
 testdata/

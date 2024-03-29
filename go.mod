@@ -7,6 +7,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13
 	github.com/peterh/liner v1.2.1
 	github.com/shoenig/test v1.7.2
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
