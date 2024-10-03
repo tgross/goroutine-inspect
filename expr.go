@@ -10,6 +10,17 @@ import (
 	"strings"
 )
 
+var errExpectedLiteral = errors.New("expected basic literal (ex. string or number)")
+
+func literal(ex ast.Expr) (string, error) {
+	lit, ok := ex.(*ast.BasicLit)
+	if !ok {
+		return "", errExpectedLiteral
+	}
+
+	return lit.Value, nil
+}
+
 func expr(e string) error {
 	ex, err := parser.ParseExpr(e)
 	if err != nil {
@@ -20,14 +31,22 @@ func expr(e string) error {
 	case *ast.CallExpr:
 		switch fun := ex.Fun.(type) {
 		case *ast.SelectorExpr:
-			k := fun.X.(*ast.Ident).Name
+			ident, ok := fun.X.(*ast.Ident)
+			if !ok {
+				return errors.New("expected identifier")
+			}
+			k := ident.Name
 			if v, ok := workspace[k]; ok {
 				switch fun.Sel.Name {
 				case "delete":
 					if len(ex.Args) != 1 {
-						return errors.New("keep() expects exactly one argument")
+						return errors.New("delete() expects exactly one argument")
 					}
-					return v.Delete(ex.Args[0].(*ast.BasicLit).Value)
+					lit, err := literal(ex.Args[0])
+					if err != nil {
+						return fmt.Errorf("invalid input to delete(): %w", err)
+					}
+					return v.Delete(lit)
 				case "dedup":
 					if len(ex.Args) != 0 {
 						return errors.New("dedup() expects no arguments")
@@ -38,12 +57,20 @@ func expr(e string) error {
 					if len(ex.Args) != 1 {
 						return errors.New("delete() expects exactly one argument")
 					}
-					return v.Keep(ex.Args[0].(*ast.BasicLit).Value)
+					lit, err := literal(ex.Args[0])
+					if err != nil {
+						return fmt.Errorf("invalid input to keep(): %w", err)
+					}
+					return v.Keep(lit)
 				case "save":
 					if len(ex.Args) != 1 {
 						return errors.New("save() expects exactly one argument")
 					}
-					fn := strings.Trim(ex.Args[0].(*ast.BasicLit).Value, "\"")
+					lit, err := literal(ex.Args[0])
+					if err != nil {
+						return fmt.Errorf("invalid input to save(): %w", err)
+					}
+					fn := strings.Trim(lit, "\"")
 					if _, err := os.Stat(fn); err == nil {
 						pmpt := fmt.Sprintf("File %s already exists, overwrite it? [Y]/n: ", fn)
 						var confirm string

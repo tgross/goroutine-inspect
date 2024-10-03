@@ -91,7 +91,11 @@ func assign(cmd string) error {
 					if len(ex.Args) != 1 {
 						return errors.New("load() expects exactly one argument")
 					}
-					dump, err := load(ex.Args[0].(*ast.BasicLit).Value)
+					lit, err := literal(ex.Args[0])
+					if err != nil {
+						return fmt.Errorf("invalid input to load(): %w", err)
+					}
+					dump, err := load(lit)
 					if err != nil {
 						return err
 					}
