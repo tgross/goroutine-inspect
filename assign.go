@@ -102,10 +102,10 @@ func assign(cmd string) error {
 					workspace[k] = dump
 					dump.Summary()
 				} else {
-					return fmt.Errorf("unknown instrution %s", fun.Name)
+					return fmt.Errorf("unknown instruction %s", fun.Name)
 				}
 			default:
-				return fmt.Errorf("unknown instrution")
+				return fmt.Errorf("unknown instruction")
 			}
 		case *ast.Ident:
 			if v, ok := workspace[ex.String()]; ok {
@@ -114,7 +114,7 @@ func assign(cmd string) error {
 				return fmt.Errorf("variable %s not found in workspace", ex.String())
 			}
 		default:
-			return errors.New("unknown instrution")
+			return errors.New("unknown instruction")
 		}
 	}
 	return nil

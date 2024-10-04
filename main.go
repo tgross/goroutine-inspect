@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
-
-	"os"
-
 	"sort"
+	"strings"
 
 	"github.com/peterh/liner"
 )
@@ -45,9 +43,19 @@ func init() {
 }
 
 func main() {
-	line = createLiner()
-	defer line.Close()
-	defer saveLiner(line)
+	var err error
+	line, err = createLiner()
+	if err != nil {
+		fmt.Println("could not read history file: %w", err)
+	}
+
+	defer func() {
+		err := saveLiner(line)
+		if err != nil {
+			fmt.Println("could not save history file: %w", err)
+		}
+		line.Close()
+	}()
 
 	for {
 		if cmd, err := line.Prompt(">> "); err == nil {

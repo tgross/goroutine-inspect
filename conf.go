@@ -29,7 +29,7 @@ func getHistoryFile() string {
 	return filepath.Join(getConfDir(), "history")
 }
 
-func createLiner() *liner.State {
+func createLiner() (*liner.State, error) {
 	line := liner.NewLiner()
 	line.SetCompleter(func(line string) (c []string) {
 		for n := range commands {
@@ -41,19 +41,23 @@ func createLiner() *liner.State {
 	})
 
 	if f, err := os.Open(getHistoryFile()); err == nil {
-		line.ReadHistory(f)
-		f.Close()
+		defer f.Close()
+		_, err := line.ReadHistory(f)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return line
+	return line, nil
 }
 
-func saveLiner(liner *liner.State) {
+func saveLiner(liner *liner.State) error {
 	f, err := os.Create(getHistoryFile())
 	if err != nil {
 		log.Fatal("Error writing history file: ", err)
 	}
 	defer f.Close()
 
-	liner.WriteHistory(f)
+	_, err = liner.WriteHistory(f)
+	return err
 }

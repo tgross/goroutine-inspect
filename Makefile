@@ -19,6 +19,7 @@ test:
 .PHONY: check
 check:
 	go vet ./...
+	golangci-lint run ./...
 	go mod tidy
 
 .PHONY: clean

@@ -142,11 +142,11 @@ func expr(e string) error {
 					v.Show(offset, limit)
 					return nil
 				default:
-					return fmt.Errorf("unknown instrution")
+					return fmt.Errorf("unknown instruction")
 				}
 			}
 		default:
-			return fmt.Errorf("unknown instrution")
+			return fmt.Errorf("unknown instruction")
 		}
 	case *ast.Ident:
 		if v, ok := workspace[ex.String()]; ok {
@@ -155,7 +155,7 @@ func expr(e string) error {
 			return fmt.Errorf("variable %s not found in workspace", e)
 		}
 	default:
-		return fmt.Errorf("unknown instrution")
+		return fmt.Errorf("unknown instruction")
 	}
 
 	return nil
