@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	startLinePattern = regexp.MustCompile(`^goroutine\s+(\d+)\s+\[(.*)\]:$`)
+	startLinePattern = regexp.MustCompile(`^goroutine\s+(\d+)\s+.*\[(.*)\]:$`)
 )
 
 func load(fn string) (*GoroutineDump, error) {

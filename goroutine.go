@@ -175,7 +175,10 @@ func NewGoroutine(metaline string) (*Goroutine, error) {
 		}
 	}
 
-	idstr := strings.TrimSpace(metaline[9:idx])
+	// TODO: this throws out the "gp=", "m=", and "mp=" fields we see on a
+	// SIGQUIT. We should have searchable fields for these as well.
+	idxParts := strings.Split(strings.TrimSpace(metaline[9:idx]), " ")
+	idstr := strings.TrimSpace(idxParts[0])
 	id, err := strconv.Atoi(idstr)
 	if err != nil {
 		return nil, err
