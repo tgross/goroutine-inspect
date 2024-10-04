@@ -190,7 +190,8 @@ created by www.test.com/bagel/runtime.EnableGoroutineDump.func1
 ### Search Goroutine Dump Items
 
 Similar to show(), but with a conditional to only show items meeting certain
-criteria:
+criteria. The offset and limit arguments for search() are applied only to
+matching goroutines.
 
 ```bash
 >> original.search("id < 2000", 15, 1) # offset 15, limit 1
