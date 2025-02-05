@@ -25,3 +25,7 @@ check:
 .PHONY: clean
 clean:
 	rm -rf ./dist
+
+.PHONY: install
+install: dist/goroutine-inspect
+	ln -sf $(shell pwd)/dist/goroutine-inspect ~/go/bin/goroutine-inspect
