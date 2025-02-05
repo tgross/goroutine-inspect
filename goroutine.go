@@ -74,13 +74,13 @@ func (g *Goroutine) AddLine(l string) {
 		g.buf.WriteString(l)
 		g.buf.WriteString("\n")
 
-		if strings.HasPrefix(l, "\t") {
-			parts := strings.Split(l, " ")
-			if len(parts) != 2 {
-				return
-			}
+		if strings.HasPrefix(l, "\t") || strings.HasPrefix(l, " ") {
 
-			fl := strings.TrimSpace(parts[0])
+			// sigquit dumps include fp, sp, and pc for each line, so we only
+			// want the line itself here
+			l = strings.TrimSpace(l)
+			parts := strings.Split(l, " ")
+			fl := parts[0]
 
 			h := md5.New()
 			io.WriteString(h, fl) //nolint:errcheck

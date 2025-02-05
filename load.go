@@ -42,6 +42,12 @@ func loadFrom(r io.Reader) (*GoroutineDump, error) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if startLinePattern.MatchString(line) {
+			// Freeze any previous goroutine to tolerate dumps without line
+			// breaks
+			if goroutine != nil {
+				goroutine.Freeze()
+			}
+
 			goroutine, err = NewGoroutine(line)
 			if err != nil {
 				return nil, err
