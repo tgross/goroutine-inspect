@@ -210,6 +210,7 @@ func (gd *GoroutineDump) Add(g *Goroutine) {
 // Copy duplicates and returns the GoroutineDump.
 func (gd GoroutineDump) Copy(cond string) *GoroutineDump {
 	dump := GoroutineDump{
+		w:          gd.w,
 		goroutines: []*Goroutine{},
 	}
 	if cond == "" {
@@ -300,7 +301,9 @@ func (gd *GoroutineDump) Diff(another *GoroutineDump) (*GoroutineDump, *Goroutin
 			ronly[v.id] = v
 		}
 	}
-	return NewGoroutineDumpFromMap(lonly), NewGoroutineDumpFromMap(common), NewGoroutineDumpFromMap(ronly)
+	return NewGoroutineDumpFromMap(lonly, gd.w),
+		NewGoroutineDumpFromMap(common, gd.w),
+		NewGoroutineDumpFromMap(ronly, gd.w)
 }
 
 // Keep keeps by the condition.
@@ -402,9 +405,10 @@ func NewGoroutineDump(w io.Writer) *GoroutineDump {
 }
 
 // NewGoroutineDumpFromMap creates and returns a new GoroutineDump from a map.
-func NewGoroutineDumpFromMap(gs map[int]*Goroutine) *GoroutineDump {
+func NewGoroutineDumpFromMap(gs map[int]*Goroutine, w io.Writer) *GoroutineDump {
 	gd := &GoroutineDump{
 		goroutines: []*Goroutine{},
+		w:          w,
 	}
 	for _, v := range gs {
 		gd.goroutines = append(gd.goroutines, v)
