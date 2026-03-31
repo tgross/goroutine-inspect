@@ -2,9 +2,10 @@
 
 An interactive tool to analyze Golang goroutine dump.
 
-_Note: this is my personal fork of [linuxerwang/goroutine-inspect] and
-has no support or guarantee that breaking behavior changes won't
-change at any time._
+_Note: this was my personal fork of [linuxerwang/goroutine-inspect]. I've
+further forked it into [`goroutine-explore`][], so I've archived this
+repository. Feel free to fork it yourself if you want to continue maintaining
+it._
 
 ## Build and Run
 
@@ -350,3 +351,4 @@ Example:
 
 [`govaluate`]: https://github.com/Knetic/govaluate#what-operators-and-types-does-this-support
 [linuxerwang/goroutine-inspect]: https://github.com/linuxerwang/goroutine-inspect
+[`goroutine-explore`]: https://github.com/tgross/goroutine-explore
